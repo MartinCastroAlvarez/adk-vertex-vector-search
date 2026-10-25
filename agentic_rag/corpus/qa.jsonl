@@ -1,0 +1,50 @@
+{"id": "q01", "question": "What is the default port of the Lumen 1.4 server?", "relevant": ["lumen-1.4-configuration#network-settings", "lumen-1.4-getting-started#starting-the-server"]}
+{"id": "q02", "question": "What is the default port in Lumen 2.0?", "relevant": ["lumen-2.0-configuration#network-settings", "lumen-2.0-release-notes#breaking-changes"]}
+{"id": "q03", "question": "Why did the default port change in Lumen 2.0?", "relevant": ["lumen-2.0-release-notes#breaking-changes"]}
+{"id": "q04", "question": "How do clients authenticate in Lumen 1.4?", "relevant": ["lumen-1.4-configuration#authentication"]}
+{"id": "q05", "question": "How do I create an API token in Lumen 2.0?", "relevant": ["lumen-2.0-configuration#authentication", "lumen-2.0-release-notes#breaking-changes"]}
+{"id": "q06", "question": "How do I enable mutual TLS in Lumen 3.0?", "relevant": ["lumen-3.0-configuration#authentication-and-tls"]}
+{"id": "q07", "question": "What is the maximum value size in Lumen 1.4?", "relevant": ["lumen-1.4-configuration#storage-limits", "lumen-1.4-getting-started#reading-and-writing-keys", "lumen-1.4-troubleshooting#lum-210-value-too-large"]}
+{"id": "q08", "question": "What is the maximum value size in Lumen 3.0?", "relevant": ["lumen-3.0-configuration#storage-limits", "lumen-3.0-release-notes#highlights"]}
+{"id": "q09", "question": "What does error LUM-104 mean?", "relevant": ["lumen-1.4-troubleshooting#lum-104-lock-file-held"]}
+{"id": "q10", "question": "What does LUM-311 quorum lost mean in Lumen 3.0?", "relevant": ["lumen-3.0-troubleshooting#lum-311-quorum-lost"]}
+{"id": "q11", "question": "How does compaction work in Lumen 1.4?", "relevant": ["lumen-1.4-configuration#compaction", "lumen-1.4-troubleshooting#slow-writes-after-many-deletes"]}
+{"id": "q12", "question": "When does automatic compaction start in Lumen 2.0?", "relevant": ["lumen-2.0-configuration#compaction-settings"]}
+{"id": "q13", "question": "What is tiered compaction in Lumen 3.0?", "relevant": ["lumen-3.0-configuration#tiered-compaction"]}
+{"id": "q14", "question": "How do I add a Mirror replica in Lumen 2.0?", "relevant": ["lumen-2.0-mirror-replication#adding-a-replica"]}
+{"id": "q15", "question": "What is the default Mirror lag alert threshold?", "relevant": ["lumen-2.0-mirror-replication#lag-alerts"]}
+{"id": "q16", "question": "What replaced Mirror replication in Lumen 3.0?", "relevant": ["lumen-3.0-release-notes#highlights", "lumen-3.0-release-notes#breaking-changes"]}
+{"id": "q17", "question": "What is the default Raft election timeout in Lumen 3.0?", "relevant": ["lumen-3.0-raft-groups#election-timeout-and-heartbeats", "lumen-3.0-troubleshooting#frequent-leader-elections"]}
+{"id": "q18", "question": "How many servers can a Lumen Raft group have?", "relevant": ["lumen-3.0-raft-groups#creating-a-group", "lumen-3.0-raft-groups#how-raft-groups-work"]}
+{"id": "q19", "question": "How do I take an incremental snapshot in Lumen 3.0?", "relevant": ["lumen-3.0-backups#incremental-snapshots"]}
+{"id": "q20", "question": "How many snapshots does Lumen 3.0 keep by default?", "relevant": ["lumen-3.0-backups#snapshot-retention"]}
+{"id": "q21", "question": "How do I take a backup in Lumen 1.4?", "relevant": ["lumen-1.4-operations#backups"]}
+{"id": "q22", "question": "How do I expire keys with a TTL in Lumen 2.0?", "relevant": ["lumen-2.0-operations#key-expiry-ttl"]}
+{"id": "q23", "question": "How do I upgrade Lumen from 1.4 to 2.0?", "relevant": ["lumen-2.0-release-notes#upgrading-from-1-4"]}
+{"id": "q24", "question": "Why does a Lumen 3.0 server refuse to start after the upgrade?", "relevant": ["lumen-3.0-troubleshooting#servers-refuse-to-start-after-upgrading", "lumen-3.0-release-notes#breaking-changes"]}
+{"id": "q25", "question": "Where are metrics exposed in Lumen 2.0?", "relevant": ["lumen-2.0-operations#monitoring"]}
+{"id": "q26", "question": "Which config file does Ferry 1.0 read?", "relevant": ["ferry-1.0-getting-started#creating-a-project", "ferry-1.0-configuration#the-ferry-toml-file"]}
+{"id": "q27", "question": "What replaced ferry.toml in Ferry 2.0?", "relevant": ["ferry-2.0-release-notes#breaking-changes", "ferry-2.0-configuration#the-ferry-yaml-file"]}
+{"id": "q28", "question": "What is the health check timeout in Ferry 1.0?", "relevant": ["ferry-1.0-getting-started#health-checks"]}
+{"id": "q29", "question": "What is the default health check timeout in Ferry 2.0?", "relevant": ["ferry-2.0-configuration#health-checks", "ferry-2.0-release-notes#breaking-changes"]}
+{"id": "q30", "question": "How many releases does Ferry 1.0 keep on each host?", "relevant": ["ferry-1.0-configuration#release-retention"]}
+{"id": "q31", "question": "How many releases does Ferry 1.5 keep by default?", "relevant": ["ferry-1.5-release-notes#changes"]}
+{"id": "q32", "question": "How do I roll back a release with Ferry?", "relevant": ["ferry-1.0-rollbacks#rolling-back-a-release"]}
+{"id": "q33", "question": "How do I start a canary deploy in Ferry 1.5?", "relevant": ["ferry-1.5-canary-deploys#starting-a-canary"]}
+{"id": "q34", "question": "How do I promote a canary in Ferry 1.5?", "relevant": ["ferry-1.5-canary-deploys#promoting-or-aborting"]}
+{"id": "q35", "question": "What replaced canary deploys in Ferry 2.0?", "relevant": ["ferry-2.0-release-notes#highlights", "ferry-2.0-release-notes#breaking-changes"]}
+{"id": "q36", "question": "When does a progressive rollout abort automatically?", "relevant": ["ferry-2.0-progressive-rollouts#automatic-abort"]}
+{"id": "q37", "question": "What are the default progressive rollout steps in Ferry 2.0?", "relevant": ["ferry-2.0-progressive-rollouts#rollout-steps"]}
+{"id": "q38", "question": "Where does Ferry 1.5 look for the age key?", "relevant": ["ferry-1.5-secrets#the-encryption-key"]}
+{"id": "q39", "question": "How do I store a secret with Ferry 1.5?", "relevant": ["ferry-1.5-secrets#storing-a-secret"]}
+{"id": "q40", "question": "How does the vault secret provider authenticate in Ferry 2.0?", "relevant": ["ferry-2.0-secret-providers#the-vault-provider"]}
+{"id": "q41", "question": "What does the on_failure hook do in Ferry 2.0?", "relevant": ["ferry-2.0-configuration#hooks"]}
+{"id": "q42", "question": "How are environment variables handled in Ferry 1.0?", "relevant": ["ferry-1.0-configuration#environment-variables"]}
+{"id": "q43", "question": "How do I undo a bad deploy with Ferry?", "relevant": ["ferry-1.0-rollbacks#rolling-back-a-release"]}
+{"id": "q44", "question": "Can Lumen 2.0 copy data to a standby server?", "relevant": ["lumen-2.0-mirror-replication#what-mirror-does", "lumen-2.0-mirror-replication#adding-a-replica"]}
+{"id": "q45", "question": "Is there a way to try a new build on a few servers first in Ferry 1.5?", "relevant": ["ferry-1.5-canary-deploys#starting-a-canary"]}
+{"id": "q46", "question": "How do I reclaim disk space after deleting lots of data in Lumen 1.4?", "relevant": ["lumen-1.4-configuration#compaction", "lumen-1.4-troubleshooting#slow-writes-after-many-deletes"]}
+{"id": "q47", "question": "What happens when most members of a Lumen 3.0 cluster are down?", "relevant": ["lumen-3.0-troubleshooting#lum-311-quorum-lost", "lumen-3.0-raft-groups#how-raft-groups-work"]}
+{"id": "q48", "question": "How do I generate the key that encrypts Ferry secrets?", "relevant": ["ferry-1.5-secrets#the-encryption-key"]}
+{"id": "q49", "question": "Why does Lumen 1.4 reject my big blob?", "relevant": ["lumen-1.4-troubleshooting#lum-210-value-too-large", "lumen-1.4-configuration#storage-limits"]}
+{"id": "q50", "question": "How long does Ferry wait between rollout stages?", "relevant": ["ferry-2.0-progressive-rollouts#rollout-steps"]}

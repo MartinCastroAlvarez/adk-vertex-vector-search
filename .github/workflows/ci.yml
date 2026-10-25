@@ -1,0 +1,185 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Every job runs offline: the stub model, the hashing embedder, a local index.
+  # No ollama, no model download, no key, no Google Cloud project.
+  RAG_PROVIDER: stub
+  RAG_STORE: local
+
+jobs:
+  lint:
+    name: Lint (ruff + mypy + bandit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction
+      - name: ruff check
+        run: poetry run ruff check agentic_rag tests examples
+      - name: ruff format --check
+        run: poetry run ruff format --check agentic_rag tests examples
+      - name: mypy
+        run: poetry run mypy agentic_rag
+      - name: bandit
+        run: poetry run bandit -c pyproject.toml -q -r agentic_rag
+
+  audit:
+    name: pip-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies (incl. the Vertex extra)
+        run: poetry install --no-interaction --no-root --all-extras
+      - name: pip-audit
+        run: |
+          # pip is tooling, not a shipped dependency: upgrade it so its own advisories don't fail the audit.
+          poetry run python -m pip install --upgrade -q pip
+          # CVE-2026-114603 (opentelemetry-api tracestate parsing, fixed in 1.45.1): google-adk 2.13
+          # pins opentelemetry-api <=1.44, so the fix can't be installed yet. See SECURITY.md.
+          poetry run pip-audit --ignore-vuln CVE-2026-114603
+
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    env:
+      RAG_INDEX_DIR: ${{ github.workspace }}/.ci/index
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction
+      - name: Run pytest (both stores; Vertex on fake clients, no network)
+        run: poetry run pytest -q
+      - name: Quickstart (five questions, offline, with checks)
+        run: poetry run python -m examples.quickstart
+      - name: CLI (ingest, ask, refuse, search)
+        run: |
+          poetry run python -m agentic_rag --ingest
+          poetry run python -m agentic_rag --json "What is the default port in Lumen 2.0?" > answer.json
+          poetry run python -m agentic_rag --json "What is the capital of France?" > refusal.json
+          python - <<'PY'
+          import json
+          answer = json.load(open("answer.json"))
+          assert answer["status"] == "answered" and "7410" in answer["reply"], answer
+          assert answer["citations"] == ["lumen-2.0-configuration#network-settings.0"], answer
+          assert answer["searches"][0]["filters"] == {"product": "lumen", "version": "2.0"}, answer
+          refusal = json.load(open("refusal.json"))
+          assert refusal["status"] == "refused", refusal
+          print("cli ok:", answer["citations"])
+          PY
+      - name: Build the wheel and check the corpus and py.typed are inside
+        run: |
+          poetry build -q
+          python - <<'PY'
+          import glob, zipfile
+          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
+          assert any(n.endswith("agentic_rag/py.typed") for n in names), names
+          assert any(n.endswith("agentic_rag/retrieval/vertex.py") for n in names), names
+          assert sum(n.startswith("agentic_rag/corpus/") and n.endswith(".md") for n in names) == 23, names
+          assert "agentic_rag/corpus/qa.jsonl" in names, names
+          print("wheel ok:", len(names), "files")
+          PY
+
+  bench:
+    name: Retrieval benchmark (hashing embedder, deterministic)
+    runs-on: ubuntu-latest
+    env:
+      RAG_INDEX_DIR: ${{ github.workspace }}/.ci/bench
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction
+      - name: recall@k and MRR per ranking mode
+        run: |
+          poetry run python -m agentic_rag --bench | tee bench.md
+          poetry run python -m agentic_rag --bench --json > bench.json
+          python - <<'PY'
+          import json
+          scores = {s["config"]: s for s in json.load(open("bench.json"))["scores"]}
+          assert scores["hybrid+filters"]["recall@5"] >= 0.9, scores
+          assert scores["hybrid+filters"]["mrr@10"] > scores["hybrid"]["mrr@10"], scores
+          print("bench ok")
+          PY
+          cat bench.md >> "$GITHUB_STEP_SUMMARY"
+
+  adk-cli:
+    name: ADK CLI (adk run, adk eval, adk web)
+    runs-on: ubuntu-latest
+    env:
+      RAG_INDEX_DIR: ${{ github.workspace }}/.ci/adk
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction
+      - name: adk run (one question)
+        run: |
+          printf 'What is the default port in Lumen 2.0?\nexit\n' | poetry run adk run agentic_rag | tee run.txt
+          grep -q "lumen-2.0-configuration#network-settings.0" run.txt
+      - name: adk eval (local metrics only)
+        run: |
+          poetry run adk eval agentic_rag evals/agentic_rag.evalset.json \
+            --config_file_path evals/test_config.json | tee eval.txt
+          grep -q "Tests passed: 3" eval.txt
+          grep -q "Tests failed: 0" eval.txt
+      - name: adk web (API server answers /list-apps and a multi-hop /run)
+        run: |
+          poetry run adk web --host 127.0.0.1 --port 8765 . > web.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf 127.0.0.1:8765/list-apps && break; sleep 1; done
+          curl -sf 127.0.0.1:8765/list-apps | grep -q agentic_rag
+          curl -sf -X POST 127.0.0.1:8765/apps/agentic_rag/users/ci/sessions/s1 \
+            -H 'content-type: application/json' -d '{}' > /dev/null
+          curl -sf -X POST 127.0.0.1:8765/run -H 'content-type: application/json' -d '{
+            "appName": "agentic_rag", "userId": "ci", "sessionId": "s1",
+            "newMessage": {"role": "user", "parts": [{"text": "What is the default election timeout of the feature that replaced Mirror replication?"}]}
+          }' > events.json
+          python - <<'PY'
+          import json
+          events = json.load(open("events.json"))
+          calls = [p["functionCall"]["name"] for e in events for p in e["content"]["parts"] if "functionCall" in p]
+          assert calls == ["search_docs", "search_docs"], calls
+          text = events[-1]["content"]["parts"][0]["text"]
+          assert "1500 milliseconds" in text and "Sources:" in text, text
+          print("adk web ok: two hops, cited answer")
+          PY
+          kill %1 || true

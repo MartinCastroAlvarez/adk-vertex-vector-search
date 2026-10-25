@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2dd4bf"/>
+    </marker>
+    <marker id="arrowdim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="640" fill="#0b1020"/>
+  <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="80" y="108" font-size="58" font-weight="700" fill="#f8fafc">adk-vertex-vector-search</text>
+    <text x="80" y="158" font-size="26" fill="#94a3b8">Agentic RAG in Google ADK: the agent decides what to search, checks, searches again.</text>
+    <text x="80" y="194" font-size="26" fill="#94a3b8">Vertex AI Vector Search, or a free FAISS + BM25 look-alike. Runs 100% locally.</text>
+
+    <!-- question -->
+    <g font-family="'JetBrains Mono', Menlo, monospace" font-size="16">
+      <text x="80" y="262" fill="#64748b">question</text>
+      <rect x="80" y="278" width="270" height="100" rx="12" fill="#111827" stroke="#334155" stroke-width="2"/>
+      <text x="98" y="310" fill="#e2e8f0">"Default election</text>
+      <text x="98" y="336" fill="#e2e8f0">timeout of what</text>
+      <text x="98" y="362" fill="#e2e8f0">replaced Mirror?"</text>
+      <text x="80" y="430" fill="#64748b">answer</text>
+      <rect x="80" y="446" width="270" height="110" rx="12" fill="#111827" stroke="#2dd4bf" stroke-width="2"/>
+      <text x="98" y="474" fill="#e2e8f0">Raft groups</text>
+      <text x="98" y="497" fill="#2dd4bf">[3.0-release-notes]</text>
+      <text x="98" y="522" fill="#e2e8f0">1500 ms</text>
+      <text x="98" y="545" fill="#2dd4bf">[3.0-raft-groups]</text>
+    </g>
+
+    <!-- agent loop -->
+    <rect x="420" y="250" width="400" height="306" rx="16" fill="#0f1a2e" stroke="#2dd4bf" stroke-width="2.5"/>
+    <text x="620" y="288" font-size="22" font-weight="700" fill="#f8fafc" text-anchor="middle">LlmAgent researcher</text>
+    <g font-family="'JetBrains Mono', Menlo, monospace" font-size="16" fill="#cbd5e1">
+      <text x="446" y="330">1 plan · rewrite · filters</text>
+      <text x="446" y="366">2 search_docs(query,</text>
+      <text x="486" y="390" fill="#2dd4bf">product=lumen, version=3.0)</text>
+      <text x="446" y="426">3 self-check: enough?</text>
+      <text x="486" y="450" fill="#94a3b8">no → refine, hop ≤ 3</text>
+      <text x="446" y="486">4 answer [cite] or refuse</text>
+      <text x="446" y="528" fill="#64748b" font-size="14">citation_guard: cites ⊆ retrieved</text>
+    </g>
+    <path d="M440 420 C 400 420, 400 362, 436 362" fill="none" stroke="#2dd4bf" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <!-- store -->
+    <rect x="890" y="250" width="320" height="306" rx="16" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <text x="910" y="280" font-size="16" fill="#64748b" font-family="'JetBrains Mono', Menlo, monospace">VectorStore</text>
+    <rect x="910" y="296" width="280" height="112" rx="12" fill="#111827" stroke="#334155" stroke-width="2"/>
+    <text x="928" y="326" font-size="18" font-weight="700" fill="#f8fafc">Vertex AI Vector Search</text>
+    <g font-family="'JetBrains Mono', Menlo, monospace" font-size="14" fill="#94a3b8">
+      <text x="928" y="352">find_neighbors · upserts</text>
+      <text x="928" y="374">dense + sparse → RRF(alpha)</text>
+      <text x="928" y="396">restricts · numeric · crowding</text>
+    </g>
+    <rect x="910" y="424" width="280" height="112" rx="12" fill="#111827" stroke="#2dd4bf" stroke-width="2"/>
+    <text x="928" y="454" font-size="18" font-weight="700" fill="#f8fafc">LocalVectorSearch</text>
+    <g font-family="'JetBrains Mono', Menlo, monospace" font-size="14" fill="#94a3b8">
+      <text x="928" y="480">FAISS dense + BM25 sparse</text>
+      <text x="928" y="502">same semantics, same tests</text>
+      <text x="928" y="524" fill="#2dd4bf">free · default</text>
+    </g>
+
+    <!-- arrows -->
+    <line x1="350" y1="328" x2="414" y2="328" stroke="#2dd4bf" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <line x1="420" y1="500" x2="356" y2="500" stroke="#2dd4bf" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <line x1="820" y1="380" x2="904" y2="380" stroke="#64748b" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrowdim)"/>
+    <line x1="820" y1="380" x2="904" y2="470" stroke="#64748b" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrowdim)"/>
+
+    <text x="80" y="606" font-size="18" fill="#64748b">query rewriting · decomposition · metadata filters · multi-hop · self-check · citations · refusal</text>
+  </g>
+</svg>

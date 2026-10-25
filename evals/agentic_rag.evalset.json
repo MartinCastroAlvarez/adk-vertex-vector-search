@@ -1,0 +1,134 @@
+{
+  "eval_set_id": "agentic_rag_smoke",
+  "name": "agentic RAG smoke set",
+  "description": "Recorded with RAG_PROVIDER=stub (hash embedder). The search trajectory (queries and filters) and the cited answer must match.",
+  "eval_cases": [
+    {
+      "eval_id": "filtered_lookup",
+      "conversation": [
+        {
+          "invocation_id": "filtered_lookup-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "What is the default port in Lumen 2.0?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "Lumen 2.0: `port` defaults to 7410 in Lumen 2.0 (it was 7400 in 1.x). [lumen-2.0-configuration#network-settings.0]\n\nSources:\n- [lumen-2.0-configuration#network-settings.0] Lumen 2.0 configuration reference - Network settings"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "search_docs",
+                "args": {
+                  "query": "port",
+                  "product": "lumen",
+                  "version": "2.0"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "agentic_rag",
+        "user_id": "eval",
+        "state": {}
+      }
+    },
+    {
+      "eval_id": "multi_hop_bridge",
+      "conversation": [
+        {
+          "invocation_id": "multi_hop_bridge-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "What is the default election timeout of the feature that replaced Mirror replication?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "Lumen 3.0: Lumen 3.0 replaces Mirror replication with Raft groups, which replicate every write to a majority of servers before acknowledging it. [lumen-3.0-release-notes#highlights.0] Lumen 3.0: A follower that hears nothing for `raft.election_timeout_ms`, which defaults to 1500 milliseconds, starts an election. [lumen-3.0-raft-groups#election-timeout-and-heartbeats.0]\n\nSources:\n- [lumen-3.0-release-notes#highlights.0] Lumen 3.0 release notes - Highlights\n- [lumen-3.0-raft-groups#election-timeout-and-heartbeats.0] Raft groups in Lumen 3.0 - Election timeout and heartbeats"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "search_docs",
+                "args": {
+                  "query": "mirror replication replaced"
+                }
+              },
+              {
+                "name": "search_docs",
+                "args": {
+                  "query": "Raft groups election timeout",
+                  "product": "lumen",
+                  "version": "3.0"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "agentic_rag",
+        "user_id": "eval",
+        "state": {}
+      }
+    },
+    {
+      "eval_id": "refusal",
+      "conversation": [
+        {
+          "invocation_id": "refusal-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "What is the capital of France?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "I can't answer that from the documentation."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "search_docs",
+                "args": {
+                  "query": "capital france"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "agentic_rag",
+        "user_id": "eval",
+        "state": {}
+      }
+    }
+  ]
+}
